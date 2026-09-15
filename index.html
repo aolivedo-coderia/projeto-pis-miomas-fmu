@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detecção e Segmentação de Miomas em Ultrassonografias Pélvicas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* Header e Navegação */
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: slideDown 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            animation: slideUp 0.8s ease;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #229954;
+            transform: translateY(-2px);
+        }
+
+        /* Animações */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Seções */
+        section {
+            padding: 4rem 0;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #1e3c72;
+            text-align: center;
+        }
+
+        /* Equipe */
+        .equipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: #1e3c72;
+            margin-bottom: 1rem;
+        }
+
+        /* Tabela Técnica */
+        .tabela-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Pipeline */
+        .pipeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .step {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 5px solid #27ae60;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            counter-increment: step-counter;
+        }
+
+        .step::before {
+            content: counter(step-counter);
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            color: #1e3c72;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tecnologias */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tech-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .tech-card:hover {
+            transform: scale(1.05);
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-card h3 {
+            color: #1e3c72;
+        }
+
+        /* Código */
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1.5rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin-top: 2rem;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+
+        .code-block code {
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: #27ae60;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            section h2 {
+                font-size: 1.8rem;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            table th, table td {
+                padding: 0.7rem;
+            }
+        }
+
+        /* Contador para steps */
+        .pipeline {
+            counter-reset: step-counter;
+        }
+
+        /* Destaque */
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 5px solid #ffc107;
+            margin: 2rem 0;
+        }
+
+        .highlight strong {
+            color: #1e3c72;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    🩺 Miomas AI
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#equipe">Equipe</a></li>
+                    <li><a href="#tecnica">Técnica</a></li>
+                    <li><a href="#pipeline">Pipeline</a></li>
+                    <li><a href="#tecnologias">Tecnologias</a></li>
+                    <li><a href="#execucao">Execução</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>🩺 Detecção e Segmentação de Miomas em Ultrassonografias Pélvicas</h1>
+            <p>Pipeline computacional de visão para auxílio à segmentação de miomas uterinos em exames de ultrassonografia</p>
+            <a href="#execucao" class="btn">Começar</a>
+        </div>
+    </section>
+
+    <!-- Equipe e Contexto -->
+    <section id="equipe">
+        <div class="container">
+            <h2>👥 Equipe e Contexto</h2>
+            <div class="equipe-grid">
+                <div class="card">
+                    <h3>📚 Instituição</h3>
+                    <p><strong>FMU | FIAM-FAAM</strong></p>
+                    <p>Centro Universitário FMU</p>
+                </div>
+                <div class="card">
+                    <h3>📖 Disciplina</h3>
+                    <p><strong>Processamento de Imagem e Sinais (PIS)</strong></p>
+                    <p>Período: 2026.2</p>
+                </div>
+                <div class="card">
+                    <h3>👩‍💻 Integrante</h3>
+                    <p><strong>Ana Claudia de Souza Oliveira</strong></p>
+                    <p>Anny Olivedo</p>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>🎯 Objetivo:</strong> Implementar um pipeline computacional de visão para auxílio à segmentação de miomas uterinos em exames de ultrassonografia, aplicando conceitos de caracterização de imagens, limiarização matemática e validação por métricas padrão-ouro.
+            </div>
+        </div>
+    </section>
+
+    <!-- Ficha Técnica -->
+    <section id="tecnica">
+        <div class="container">
+            <h2>📋 Artefato 1: Ficha Técnica e Caracterização da Imagem</h2>
+            <div class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parâmetro Técnico</th>
+                            <th>Especificação Utilizada</th>
+                            <th>Justificativa Acadêmica</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Modalidade</strong></td>
+                            <td>Ultrassonografia Pélvica / Ginecológica</td>
+                            <td>Exame de rotina para identificação de ecogenicidade tecidual.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Formato</strong></td>
+                            <td>PNG (Canal Único / Escala de Cinza)</td>
+                            <td>Preservação fiel dos níveis de reflexão e atenuação acústica.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Resolução</strong></td>
+                            <td>884 x 896 pixels</td>
+                            <td>Grade espacial otimizada para amostragem segura das estruturas.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Profundidade</strong></td>
+                            <td>8 bits (256 tons de cinza)</td>
+                            <td>Dinâmica ideal para distinguir o miométrio do tecido miomatoso.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pipeline Metodológico -->
+    <section id="pipeline">
+        <div class="container">
+            <h2>⚙️ Pipeline Metodológico</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">O algoritmo implementado no script principal (<code>main.py</code>) executa o fluxo sequencial de processamento:</p>
+
+            <div class="pipeline">
+                <div class="step">
+                    <h3>Carregamento</h3>
+                    <p>Leitura da imagem ultrassonográfica em matriz de intensidade única.</p>
+                </div>
+                <div class="step">
+                    <h3>Análise de Histograma</h3>
+                    <p>Mapeamento estatístico da distribuição dos tons de cinza.</p>
+                </div>
+                <div class="step">
+                    <h3>Pré-processamento</h3>
+                    <p>Aplicação de filtro Gaussiano para atenuação do ruído granulado (speckle).</p>
+                </div>
+                <div class="step">
+                    <h3>Segmentação (Otsu)</h3>
+                    <p>Cálculo automático do limiar ótimo de separação de classes.</p>
+                </div>
+                <div class="step">
+                    <h3>Pós-Morfologia</h3>
+                    <p>Operações de Abertura e Fechamento para refinamento e limpeza da máscara binária.</p>
+                </div>
+                <div class="step">
+                    <h3>Validação</h3>
+                    <p>Cruzamento métrico de similaridade (Dice / IoU) com a referência padrão.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tecnologias -->
+    <section id="tecnologias">
+        <div class="container">
+            <h2>🛠️ Tecnologias e Dependências</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">🐍</div>
+                    <h3>Python</h3>
+                    <p>Versão 3.14+</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📷</div>
+                    <h3>OpenCV</h3>
+                    <p>Processamento de imagem e matrizes</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📊</div>
+                    <h3>SciPy & NumPy</h3>
+                    <p>Computação científica e operações matriciais</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">📈</div>
+                    <h3>Matplotlib</h3>
+                    <p>Plotagem de histogramas e exibição de máscaras</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Executar -->
+    <section id="execucao">
+        <div class="container">
+            <h2>🚀 Como Executar o Projeto</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">Clone o repositório e instale as dependências necessárias executando os comandos abaixo no seu terminal:</p>
+
+            <div class="code-block">
+                <code># 1. Instalar bibliotecas essenciais<br>python -m pip install opencv-python scipy numpy matplotlib<br><br># 2. Executar o script principal<br>python main.py</code>
+            </div>
+
+            <div class="highlight" style="margin-top: 2rem;">
+                <strong>📌 Nota:</strong> Certifique-se de que as imagens de entrada estão no diretório correto e em formato PNG com escala de cinza.
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Detecção e Segmentação de Miomas | Desenvolvido por <strong>Anny Olivedo</strong></p>
+            <p>FMU | FIAM-FAAM — Processamento de Imagem e Sinais</p>
+            <p><a href="https://github.com" target="_blank">GitHub</a> | <a href="https://fmu.br" target="_blank">FMU</a></p>
+        </div>
+    </footer>
+</body>
+</html>
