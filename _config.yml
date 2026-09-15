@@ -1,4 +1,4 @@
-theme: jekyll-theme-primer
-title: "Processamento de Imagem e Sinais | Detecção de Miomas"
-description: "Repositório oficial e documentação do projeto acadêmico de PIS - FMU"
+remote_theme: pages-themes/minimal@v0.2.0
+title: "Detecção e Segmentação de Miomas"
+description: "Projeto Acadêmico - Processamento de Imagem e Sinais (FMU)"
 show_downloads: true
